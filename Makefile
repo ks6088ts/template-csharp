@@ -44,7 +44,7 @@ test: ## run tests
 
 .PHONY: build
 build: ## build applications
-	dotnet publish -c Release -o $(OUTPUT_DIR)
+	dotnet build
 
 .PHONY: ci-test
 ci-test: install-deps-dev format-check lint test build ## run CI test
@@ -55,7 +55,7 @@ update: ## update
 
 .PHONY: release
 release: ## release applications
-	@echo "yet to be implemented"
+	dotnet publish -c Release -o $(OUTPUT_DIR)
 
 # ---
 # Docker
