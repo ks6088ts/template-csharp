@@ -20,10 +20,15 @@ jobs:
         dotnet-version:
           - "9.0.x"
     runs-on: ${{ matrix.platform }}
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # to retrieve git tags
+      - name: Install actionlint
+        shell: bash
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) latest /usr/local/bin
       - name: Set up .NET
         uses: actions/setup-dotnet@v5
         with:
