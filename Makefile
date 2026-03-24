@@ -12,8 +12,17 @@ TOOLS_DIR ?= /usr/local/bin
 # https://github.com/aquasecurity/trivy/releases
 TRIVY_VERSION ?= 0.69.3
 
+# Verbosity: 1 = detailed (default), 0 = minimal
+VERBOSE ?= 1
+ifeq ($(VERBOSE),1)
+    DOTNET_VERBOSITY = --verbosity detailed
+else
+    DOTNET_VERBOSITY = --verbosity minimal
+endif
+
 # Misc
 OUTPUT_DIR ?= obj
+CLI_PROJECT ?= src/Cli/TemplateCsharp.Cli.csproj
 
 .PHONY: help
 help:
@@ -25,38 +34,47 @@ install-deps-dev: ## install dependencies for development
 	@# https://aquasecurity.github.io/trivy/v0.18.3/installation/#install-script
 	@which trivy || curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b $(TOOLS_DIR) v$(TRIVY_VERSION)
 	@which actionlint || echo "install actionlint https://github.com/rhysd/actionlint"
-	dotnet restore
+	dotnet restore $(DOTNET_VERBOSITY)
 
 .PHONY: format-check
-format-check: ## format check
-	@echo "yet to be implemented"
+format-check: ## check code formatting without making changes
+	dotnet format --verify-no-changes $(DOTNET_VERBOSITY)
 
 .PHONY: format
 format: ## format code
-	@echo "yet to be implemented"
+	dotnet format $(DOTNET_VERBOSITY)
 
 .PHONY: lint
-lint: ## lint
+lint: ## lint GitHub Actions workflows and C# code
 	actionlint
+	dotnet build $(DOTNET_VERBOSITY) -warnaserror
 
 .PHONY: test
 test: ## run tests
-	@echo "yet to be implemented"
+	dotnet test $(DOTNET_VERBOSITY)
 
 .PHONY: build
 build: ## build applications
-	dotnet build
+	dotnet build $(DOTNET_VERBOSITY)
 
 .PHONY: ci-test
-ci-test: install-deps-dev format-check lint test build ## run CI test
+ci-test: install-deps-dev format-check lint test build ## run CI tests
 
 .PHONY: update
-update: ## update
-	@echo "yet to be implemented"
+update: ## update NuGet packages
+	dotnet outdated $(DOTNET_VERBOSITY) || true
 
 .PHONY: release
-release: ## release applications
-	dotnet publish -c Release -o $(OUTPUT_DIR)
+release: ## publish CLI application
+	dotnet publish $(CLI_PROJECT) -c Release -o $(OUTPUT_DIR) $(DOTNET_VERBOSITY)
+
+.PHONY: run
+run: ## run CLI application
+	dotnet run --project $(CLI_PROJECT)
+
+.PHONY: run-verbose
+run-verbose: ## run CLI application with verbose output
+	dotnet run --project $(CLI_PROJECT) -- --verbose
 
 # ---
 # Docker
@@ -83,4 +101,4 @@ docker-scan: ## scan Docker image
 	trivy image $(DOCKER_REPO_NAME)/$(DOCKER_IMAGE_NAME):$(GIT_TAG)
 
 .PHONY: ci-test-docker
-ci-test-docker: install-deps-dev docker-lint docker-build docker-scan docker-run ## run CI test for Docker
+ci-test-docker: install-deps-dev docker-lint docker-build docker-scan docker-run ## run CI tests for Docker
