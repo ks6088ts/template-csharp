@@ -11,6 +11,6 @@ public class AppConfiguration
     /// <param name="key">The name of the environment variable.</param>
     /// <param name="defaultValue">The value to return when the variable is not set.</param>
     /// <returns>The environment variable value, or <paramref name="defaultValue"/>.</returns>
-    public string GetEnvironmentVariable(string key, string defaultValue = "") =>
+    public static string GetEnvironmentVariable(string key, string defaultValue = "") =>
         Environment.GetEnvironmentVariable(key) ?? defaultValue;
 }

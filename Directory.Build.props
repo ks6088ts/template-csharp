@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Roslyn-based code style analysis during build -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- .NET platform analyzers -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <!-- Analysis level: latest recommended rules -->
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+  </PropertyGroup>
+
+</Project>
