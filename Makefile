@@ -14,6 +14,7 @@ TRIVY_VERSION ?= 0.69.3
 
 # Misc
 OUTPUT_DIR ?= obj
+CLI_PROJECT ?= src/Cli/TemplateCsharp.Cli.csproj
 
 .PHONY: help
 help:
@@ -25,38 +26,43 @@ install-deps-dev: ## install dependencies for development
 	@# https://aquasecurity.github.io/trivy/v0.18.3/installation/#install-script
 	@which trivy || curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b $(TOOLS_DIR) v$(TRIVY_VERSION)
 	@which actionlint || echo "install actionlint https://github.com/rhysd/actionlint"
-	dotnet restore
+	dotnet restore --verbosity detailed
 
 .PHONY: format-check
-format-check: ## format check
-	@echo "yet to be implemented"
+format-check: ## check code formatting without making changes
+	dotnet format --verify-no-changes --verbosity detailed
 
 .PHONY: format
 format: ## format code
-	@echo "yet to be implemented"
+	dotnet format --verbosity detailed
 
 .PHONY: lint
-lint: ## lint
+lint: ## lint GitHub Actions workflows and C# code
 	actionlint
+	dotnet build --verbosity detailed -warnaserror
 
 .PHONY: test
 test: ## run tests
-	@echo "yet to be implemented"
+	dotnet test --verbosity detailed
 
 .PHONY: build
 build: ## build applications
-	dotnet build
+	dotnet build --verbosity detailed
 
 .PHONY: ci-test
-ci-test: install-deps-dev format-check lint test build ## run CI test
+ci-test: install-deps-dev format-check lint test build ## run CI tests
 
 .PHONY: update
-update: ## update
-	@echo "yet to be implemented"
+update: ## update NuGet packages
+	dotnet outdated --verbosity detailed || true
 
 .PHONY: release
-release: ## release applications
-	dotnet publish -c Release -o $(OUTPUT_DIR)
+release: ## publish CLI application
+	dotnet publish $(CLI_PROJECT) -c Release -o $(OUTPUT_DIR) --verbosity detailed
+
+.PHONY: run
+run: ## run CLI application
+	dotnet run --project $(CLI_PROJECT) -- --verbose
 
 # ---
 # Docker
@@ -83,4 +89,4 @@ docker-scan: ## scan Docker image
 	trivy image $(DOCKER_REPO_NAME)/$(DOCKER_IMAGE_NAME):$(GIT_TAG)
 
 .PHONY: ci-test-docker
-ci-test-docker: install-deps-dev docker-lint docker-build docker-scan docker-run ## run CI test for Docker
+ci-test-docker: install-deps-dev docker-lint docker-build docker-scan docker-run ## run CI tests for Docker
