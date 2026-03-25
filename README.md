@@ -9,7 +9,7 @@ A GitHub template repository for C#
 
 ## Prerequisites
 
-- [.NET 9.0+](https://dotnet.microsoft.com/download)
+- [.NET 10.0+](https://dotnet.microsoft.com/download)
 - [GNU Make](https://www.gnu.org/software/make/)
 
 ## Development instructions

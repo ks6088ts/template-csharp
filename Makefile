@@ -12,14 +12,6 @@ TOOLS_DIR ?= /usr/local/bin
 # https://github.com/aquasecurity/trivy/releases
 TRIVY_VERSION ?= 0.69.3
 
-# Verbosity: 1 = detailed (default), 0 = minimal
-VERBOSE ?= 1
-ifeq ($(VERBOSE),1)
-    DOTNET_VERBOSITY = --verbosity detailed
-else
-    DOTNET_VERBOSITY = --verbosity minimal
-endif
-
 # Misc
 OUTPUT_DIR ?= obj
 CLI_PROJECT ?= src/Cli/TemplateCsharp.Cli.csproj
@@ -34,46 +26,42 @@ install-deps-dev: ## install dependencies for development
 	@# https://aquasecurity.github.io/trivy/v0.18.3/installation/#install-script
 	@which trivy || curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b $(TOOLS_DIR) v$(TRIVY_VERSION)
 	@which actionlint || echo "install actionlint https://github.com/rhysd/actionlint"
-	dotnet restore $(DOTNET_VERBOSITY)
+	dotnet restore --verbosity detailed
 
 .PHONY: format-check
 format-check: ## check code formatting without making changes
-	dotnet format --verify-no-changes $(DOTNET_VERBOSITY)
+	dotnet format --verify-no-changes --verbosity detailed
 
 .PHONY: format
 format: ## format code
-	dotnet format $(DOTNET_VERBOSITY)
+	dotnet format --verbosity detailed
 
 .PHONY: lint
 lint: ## lint GitHub Actions workflows and C# code
 	actionlint
-	dotnet build $(DOTNET_VERBOSITY) -warnaserror
+	dotnet build --verbosity detailed -warnaserror
 
 .PHONY: test
 test: ## run tests
-	dotnet test $(DOTNET_VERBOSITY)
+	dotnet test --verbosity detailed
 
 .PHONY: build
 build: ## build applications
-	dotnet build $(DOTNET_VERBOSITY)
+	dotnet build --verbosity detailed
 
 .PHONY: ci-test
 ci-test: install-deps-dev format-check lint test build ## run CI tests
 
 .PHONY: update
 update: ## update NuGet packages
-	dotnet outdated $(DOTNET_VERBOSITY) || true
+	dotnet outdated --verbosity detailed || true
 
 .PHONY: release
 release: ## publish CLI application
-	dotnet publish $(CLI_PROJECT) -c Release -o $(OUTPUT_DIR) $(DOTNET_VERBOSITY)
+	dotnet publish $(CLI_PROJECT) -c Release -o $(OUTPUT_DIR) --verbosity detailed
 
 .PHONY: run
 run: ## run CLI application
-	dotnet run --project $(CLI_PROJECT)
-
-.PHONY: run-verbose
-run-verbose: ## run CLI application with verbose output
 	dotnet run --project $(CLI_PROJECT) -- --verbose
 
 # ---

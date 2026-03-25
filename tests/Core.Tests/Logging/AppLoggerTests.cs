@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 using TemplateCsharp.Core.Logging;
 
 namespace TemplateCsharp.Core.Tests.Logging;
