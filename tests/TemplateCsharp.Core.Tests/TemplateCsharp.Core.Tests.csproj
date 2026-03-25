@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Core\TemplateCsharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\TemplateCsharp.Core\TemplateCsharp.Core.csproj" />
   </ItemGroup>
 
 </Project>
