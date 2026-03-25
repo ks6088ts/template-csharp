@@ -54,7 +54,9 @@ ci-test: install-deps-dev format-check lint test build ## run CI tests
 
 .PHONY: update
 update: ## update NuGet packages
-	dotnet outdated --verbosity detailed || true
+	dotnet list package --outdated --format json | \
+		jq -r '.projects[] | select(.frameworks) | .path as $$proj | .frameworks[].topLevelPackages[] | "\($$proj) \(.id) \(.latestVersion)"' | \
+		while read proj pkg ver; do dotnet add "$$proj" package "$$pkg" --version "$$ver"; done
 
 .PHONY: release
 release: ## publish CLI application
