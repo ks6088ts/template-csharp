@@ -7,16 +7,14 @@ public class AppConfigurationTests
     [Fact]
     public void GetEnvironmentVariable_ReturnsDefaultWhenNotSet()
     {
-        var config = new AppConfiguration();
-        var result = config.GetEnvironmentVariable("NONEXISTENT_VAR_12345", "default");
+        var result = AppConfiguration.GetEnvironmentVariable("NONEXISTENT_VAR_12345", "default");
         Assert.Equal("default", result);
     }
 
     [Fact]
     public void GetEnvironmentVariable_ReturnsEmptyStringDefaultWhenNotSet()
     {
-        var config = new AppConfiguration();
-        var result = config.GetEnvironmentVariable("NONEXISTENT_VAR_12345");
+        var result = AppConfiguration.GetEnvironmentVariable("NONEXISTENT_VAR_12345");
         Assert.Equal(string.Empty, result);
     }
 
@@ -28,8 +26,7 @@ public class AppConfigurationTests
         Environment.SetEnvironmentVariable(key, expected);
         try
         {
-            var config = new AppConfiguration();
-            var result = config.GetEnvironmentVariable(key);
+            var result = AppConfiguration.GetEnvironmentVariable(key);
             Assert.Equal(expected, result);
         }
         finally

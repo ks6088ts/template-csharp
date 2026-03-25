@@ -1,13 +1,13 @@
 <Solution>
   <Folder Name="/src/" />
-  <Folder Name="/src/Cli/">
-    <Project Path="src/Cli/TemplateCsharp.Cli.csproj" />
+  <Folder Name="/src/TemplateCsharp.Cli/">
+    <Project Path="src/TemplateCsharp.Cli/TemplateCsharp.Cli.csproj" />
   </Folder>
-  <Folder Name="/src/Core/">
-    <Project Path="src/Core/TemplateCsharp.Core.csproj" />
+  <Folder Name="/src/TemplateCsharp.Core/">
+    <Project Path="src/TemplateCsharp.Core/TemplateCsharp.Core.csproj" />
   </Folder>
   <Folder Name="/tests/" />
-  <Folder Name="/tests/Core.Tests/">
-    <Project Path="tests/Core.Tests/TemplateCsharp.Core.Tests.csproj" />
+  <Folder Name="/tests/TemplateCsharp.Core.Tests/">
+    <Project Path="tests/TemplateCsharp.Core.Tests/TemplateCsharp.Core.Tests.csproj" />
   </Folder>
 </Solution>

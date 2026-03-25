@@ -14,7 +14,7 @@ TRIVY_VERSION ?= 0.69.3
 
 # Misc
 OUTPUT_DIR ?= obj
-CLI_PROJECT ?= src/Cli/TemplateCsharp.Cli.csproj
+CLI_PROJECT ?= src/TemplateCsharp.Cli/TemplateCsharp.Cli.csproj
 
 .PHONY: help
 help:

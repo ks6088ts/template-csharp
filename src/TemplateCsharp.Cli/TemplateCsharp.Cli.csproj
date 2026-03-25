@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\TemplateCsharp.Core.csproj" />
+    <ProjectReference Include="..\TemplateCsharp.Core\TemplateCsharp.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
